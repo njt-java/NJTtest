@@ -1,0 +1,1316 @@
+Index: src/decorator/Demo.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/decorator/Demo.java	(date 1588154775229)
++++ src/decorator/Demo.java	(date 1588154775229)
+@@ -0,0 +1,13 @@
++package decorator;
++//例子
++public class Demo {
++    public static void main(String[] args) {
++        Shape shape=new ShapeObject();
++        shape.draw();
++
++
++        //实现功能扩展
++        ShapeDecorator shapeDecorator=new ShapeDecorator(shape);
++        shapeDecorator.draw();
++    }
++}
+Index: src/Bubble/Demo.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/Bubble/Demo.java	(date 1588247746512)
++++ src/Bubble/Demo.java	(date 1588247746512)
+@@ -0,0 +1,70 @@
++package Bubble;
++
++import java.util.Arrays;
++
++//练习：冒泡排序和快速排序
++public class Demo {
++    public static void main(String[] args) {
++        int[] arr={2,1,5,13,16,14,6,18,20,12,15,9,13,17,4};
++//      arr=bubbleSort(arr);
++        ksSort(arr);
++        int[] brr=sort(arr);
++        System.out.println(Arrays.toString(arr));
++        System.out.println(Arrays.toString(brr));
++    }
++
++    //快速排序入口
++    private static void ksSort(int[] arr) {
++        if(arr.length>0){
++            sort(arr,0,arr.length-1);
++        }
++    }
++    //快速排序
++    private static void sort(int[] arr, int left, int right) {
++        int i=left;
++        int j=right;
++        //递归出口
++        if(i>j){return;}
++        //中间值
++        int k=arr[i];
++        while(i<j){
++            while(i<j&&arr[j]>k){
++                j--;
++            }
++            while(i<j&&arr[i]<=k){
++                i++;
++            }
++            //交换
++            if(i<j){
++               int temp=arr[i];
++               arr[i]=arr[j];
++               arr[j]=temp;
++            }
++        }
++        //i=j出循环，交换中间值和此时的arr[i]
++        k=arr[i];
++        arr[i]=arr[left];
++        arr[left]=k;
++
++        //左边递归
++        sort(arr,0,i-1);
++        //右边递归
++        sort(arr,i+1,right);
++    }
++
++    //冒泡排序
++    private static int[] sort(int[] arr) {
++        for (int i=0;i<arr.length;i++){
++            for (int j=0;j<arr.length-i-1;j++){
++                if(arr[j]>arr[j+1]){
++                    int temp=arr[j];
++                    arr[j]=arr[j+1];
++                    arr[j+1]=temp;
++                }
++            }
++        }
++        return arr;
++    }
++
++}
++
+Index: src/Bubble/BubbleSort.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/Bubble/BubbleSort.java	(date 1588174094557)
++++ src/Bubble/BubbleSort.java	(date 1588174094557)
+@@ -0,0 +1,85 @@
++package Bubble;
++
++import java.lang.reflect.Array;
++import java.util.Arrays;
++
++/**
++ * 冒泡排序：它重复地走访过要排序的数列，一次比较两个元素，如果它们的顺序错误就把它们交换过来。
++ * 比较相邻的元素。如果第一个比第二个大，就交换它们两个；
++ * 对每一对相邻元素作同样的工作，从开始第一对到结尾的最后一对，这样在最后的元素应该会是最大的数；
++ * 针对所有的元素重复以上的步骤，除了最后一个；
++ * 重复步骤1~3，直到排序完成。
++ *
++ * 快速排序:基于二分的思想，对冒泡排序的一种改进,通过一趟排序将要排序的数据分割成独立的两部分：
++ * 分割点左边都是比它小的数，右边都是比它大的数。然后再按此方法对这两部分数据分别进行快速排序，
++ * 整个排序过程可以递归进行，以此达到整个数据变成有序序列。
++ */
++public class BubbleSort {
++    //调用排序方法
++    public static void sort(int[] a) {
++        if (a.length > 0) {
++            sort(a, 0, a.length - 1);
++        }
++    }
++    //快速排序.使用递归的思想
++    public static void sort(int[] arr,int left,int right){
++        int i=left;
++        int j=right;
++        //校验；防止下标越界
++        if(i>j){return;}
++        //定下中间数：k 左边的那个数
++        int k=arr[i];
++        //循环执行条件 i<j；这里的跳出条件是i==j
++        while(i<j) {
++            //找出比中间数k小的数
++            while (i < j && arr[j] > k) {
++                j--;
++            }
++            //找出比中间数k大的数
++            while (i < j && arr[i] <= k) {
++                i++;
++            }
++            //交换
++            if (i < j) {
++                int swap = arr[i];
++                arr[i] = arr[j];
++                arr[j] = swap;
++            }
++        }
++        //到这里一定是i==j的；需要将arr[i]与前面的中间值k(arr[left])互换；
++        //k作为中间值
++        k=arr[i];
++        arr[i]=arr[left];
++        arr[left]=k;
++
++        //对左边进行排序,递归算法:0到i-1
++        sort(arr, left, i-1);
++        //对右边进行排序，递归算法:i+1到right
++        sort(arr,i+1,right);
++    }
++
++
++
++
++    public static int[] bubbleSort(int[] arr){
++        int temp=arr[0];
++        for (int i=0;i<arr.length;i++){
++            for(int j=0;j<arr.length-i-1;j++){
++                //如果第一个比第二个大，就交换它们两个；
++                if(arr[j]>arr[j+1]){
++                    temp=arr[j];
++                    arr[j]=arr[j+1];
++                    arr[j+1]=temp;
++                }
++            }
++        }
++        return arr;
++    }
++
++    public static void main(String[] args) {
++        int[] arr={2,1,5,13,16,14,6,18,20,12,15,9,13,17,4};
++//      arr=bubbleSort(arr);
++        sort(arr);
++        System.out.println(Arrays.toString(arr));
++    }
++}
+Index: src/decorator/ShapeObject.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/decorator/ShapeObject.java	(date 1588154234853)
++++ src/decorator/ShapeObject.java	(date 1588154234853)
+@@ -0,0 +1,8 @@
++package decorator;
++//Shape的实现类
++public class ShapeObject implements Shape{
++    @Override
++    public void draw() {
++        System.out.println("color:red");
++    }
++}
+Index: src/decorator/ShapeDecorator.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/decorator/ShapeDecorator.java	(date 1588154645462)
++++ src/decorator/ShapeDecorator.java	(date 1588154645462)
+@@ -0,0 +1,20 @@
++package decorator;
++//创建扩展了 ShapeDecorator 类的实体装饰类。
++public class ShapeDecorator extends ShapeAbstract {
++
++    public ShapeDecorator(Shape shape){
++        super(shape);
++    }
++
++    //对外提供扩展的功能
++    @Override
++    public void draw() {
++        shape.draw();
++        setRedBorder(shape);
++    }
++
++    //将原实现类传入，实现功能扩展。
++    private void setRedBorder(Shape shape){
++        System.out.println("Border Color: Red");
++    }
++}
+Index: src/decorator/ShapeAbstract.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/decorator/ShapeAbstract.java	(date 1588154494535)
++++ src/decorator/ShapeAbstract.java	(date 1588154494535)
+@@ -0,0 +1,15 @@
++package decorator;
++//创建实现了 Shape 接口的抽象装饰类。
++public abstract class ShapeAbstract implements Shape{
++    protected Shape shape;
++
++    public ShapeAbstract(Shape shape) {
++        this.shape = shape;
++    }
++
++    @Override
++    public void draw(){
++        shape.draw();
++    }
++
++}
+Index: src/decorator/Shape.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/decorator/Shape.java	(date 1588154338972)
++++ src/decorator/Shape.java	(date 1588154338972)
+@@ -0,0 +1,15 @@
++package decorator;
++/**
++ * 设计模式：装饰器模式：
++ * 允许向一个现有的对象添加新的功能，同时又不改变其结构。
++ * 这种模式创建了一个装饰类，用来包装原有的类，
++ * 并在保持类方法签名完整性的前提下，提供了额外的功能。主
++ * 要解决由于类的功能扩展导致的子类膨胀问题。
++ * 装饰模式是继承的一个替代模式，装饰模式可以动态扩展一个实现类的功能。
++ *
++ * 一个接口         --------------（实现）  一个实现类；
++ * 一个实现相同接口包含实现类的抽象类  ---- (继承)  一个抽象类的实现类(实现拓展功能）；
++ */
++public interface Shape {
++    void draw();
++}
+Index: src/factory/ShapeObject1.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/factory/ShapeObject1.java	(date 1588152574411)
++++ src/factory/ShapeObject1.java	(date 1588152574411)
+@@ -0,0 +1,10 @@
++package factory;
++//实现类1
++public class ShapeObject1 implements Shape{
++
++    @Override
++    public void draw() {
++        System.out.println("red");
++    }
++
++}
+Index: src/factory/ShapeFactory.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/factory/ShapeFactory.java	(date 1588152819578)
++++ src/factory/ShapeFactory.java	(date 1588152819578)
+@@ -0,0 +1,17 @@
++package factory;
++//定义工厂对象
++public class ShapeFactory {
++
++    //根据传入参数提供不同的对象
++    public Shape getShape(String color){
++        if(color=="red"){
++            return new ShapeObject1();
++        }else if (color=="green"){
++            return new ShapeObject2();
++        }else if (color=="pink"){
++            return new ShapeObject3();
++        }
++        return null;
++    }
++
++}
+Index: src/factory/Shape.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/factory/Shape.java	(date 1588152628557)
++++ src/factory/Shape.java	(date 1588152628557)
+@@ -0,0 +1,12 @@
++package factory;
++
++/**
++ * 设计模式：工厂模式：
++ * 创建对象时不会对客户端暴露创建逻辑，并且是通过使用一个共同的接口来指向新创建的对象。
++ * 主要解决接口选择的问题。
++ * 一个接口；多个实现类；一个提供这些实现类的工厂类
++ */
++public interface Shape {
++    //定义接口
++    void draw();
++}
+Index: src/proxy/Image.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/proxy/Image.java	(date 1588153781342)
++++ src/proxy/Image.java	(date 1588153781342)
+@@ -0,0 +1,14 @@
++package proxy;
++/**
++ * 设计模式：代理模式：
++ * 在代理模式（Proxy Pattern）中，一个类代表另一个类的功能。
++ * 创建具有现有对象的对象，以便向外界提供功能接口。
++ * 为其他对象提供一种代理以控制对这个对象的访问。
++ * 主要解决在直接访问对象时带来的问题。
++ *
++ * 一个接口；一个实现类；一个实现类的代理类(继承相同接口)
++ */
++public interface Image {
++    //1.定义接口
++    void draw();
++}
+Index: src/factory/ShapeObject3.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/factory/ShapeObject3.java	(date 1588152628604)
++++ src/factory/ShapeObject3.java	(date 1588152628604)
+@@ -0,0 +1,10 @@
++package factory;
++//实现类1
++public class ShapeObject3 implements Shape{
++
++    @Override
++    public void draw() {
++        System.out.println("pink");
++    }
++
++}
+Index: src/factory/ShapeObject2.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/factory/ShapeObject2.java	(date 1588152628573)
++++ src/factory/ShapeObject2.java	(date 1588152628573)
+@@ -0,0 +1,10 @@
++package factory;
++//实现类2
++public class ShapeObject2 implements Shape{
++
++    @Override
++    public void draw() {
++        System.out.println("green");
++    }
++
++}
+Index: src/singleton/SingleObject1.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/singleton/SingleObject1.java	(date 1588153318029)
++++ src/singleton/SingleObject1.java	(date 1588153318029)
+@@ -0,0 +1,21 @@
++package singleton;
++/**
++ * 设计模式：单例模式：
++ * 模式涉及到一个单一的类，该类负责创建自己的对象，同时确保只有单个对象被创建。
++ * 单例类只能有一个实例。单例类必须自己创建自己的唯一实例。单例类必须给所有其他对象提供这一实例。
++ *
++ * 1.饿汉式：不会等到要用的时候创建，类加载的时候就创建了
++ * 线程安全 比较常用，但容易产生垃圾对象，类加载就初始化，浪费内存
++ */
++public class SingleObject1 {
++    //创建 SingleObject 的一个对象
++    private static SingleObject1 singleObject=new SingleObject1();
++
++    //私有化构造方法，这样该类就不会被实例化
++    private SingleObject1(){};
++
++    //对外提供获取单一对象的方式
++    public static SingleObject1 getSingleObject(){
++        return singleObject;
++    }
++}
+Index: src/proxy/ProxyImage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/proxy/ProxyImage.java	(date 1588153760219)
++++ src/proxy/ProxyImage.java	(date 1588153760219)
+@@ -0,0 +1,24 @@
++package proxy;
++
++/**
++ * 定义ImageObject的代理类（继承相同接口）
++ *
++ * 当被请求时，可以使用 代理对象ProxyImage 来获取 RealImage 类的对象功能。
++ * Image image=new ProxyImage();
++ * image.display();
++ */
++
++public class ProxyImage implements Image{
++
++    private ImageObject imageObject;
++
++
++    //对外提供ImageObject的功能
++    @Override
++    public void draw() {
++        if(imageObject==null){
++            imageObject=new ImageObject();
++        }
++        imageObject.draw();
++    }
++}
+Index: src/proxy/ImageObject.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/proxy/ImageObject.java	(date 1588153554946)
++++ src/proxy/ImageObject.java	(date 1588153554946)
+@@ -0,0 +1,8 @@
++package proxy;
++//Image的实现类
++public class ImageObject implements Image{
++    @Override
++    public void draw() {
++        System.out.println("hello:proxy");
++    }
++}
+Index: src/string/demo.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/string/demo.java	(date 1588247746498)
++++ src/string/demo.java	(date 1588247746498)
+@@ -0,0 +1,17 @@
++package string;
++
++import java.util.Arrays;
++
++/**
++ * String:底层char[],值不可变，常量池；
++ * StringBuffer:底层char[],是可变字符序列，线程安全，效率相对低；
++ * StringBuilder:底层char[],是可变字符序列，线程不安全，效率相对高；
++ */
++public class demo {
++    public static void main(String[] args) {
++        String a="hello";
++        char[] chars = a.toCharArray();
++        System.out.println(Arrays.toString(chars));
++
++    }
++}
+Index: src/singleton/SingleObject2.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/singleton/SingleObject2.java	(date 1588153317988)
++++ src/singleton/SingleObject2.java	(date 1588153317988)
+@@ -0,0 +1,23 @@
++package singleton;
++/**
++ * 设计模式：单例模式：
++ * 模式涉及到一个单一的类，该类负责创建自己的对象，同时确保只有单个对象被创建。
++ * 单例类只能有一个实例。单例类必须自己创建自己的唯一实例。单例类必须给所有其他对象提供这一实例。
++ *
++ * 1.懒汉式（线程安全的如下）: 要用的时候才创建对象
++ */
++public class SingleObject2 {
++    //创建 SingleObject 的一个对象
++    private static SingleObject2 singleObject;
++
++    //私有化构造方法，这样该类就不会被实例化
++    private SingleObject2(){};
++
++    //对外提供获取单一对象的方式
++    public static synchronized SingleObject2 getSingleObject(){
++        if(singleObject==null){
++            return new SingleObject2();
++        }
++        return singleObject;
++    }
++}
+Index: .idea/$CACHE_FILE$
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/$CACHE_FILE$	(date 1588142366782)
++++ .idea/$CACHE_FILE$	(date 1588142366782)
+@@ -0,0 +1,275 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ProjectInspectionProfilesVisibleTreeState">
++    <entry key="Project Default">
++      <profile-state>
++        <expanded-state>
++          <State />
++          <State>
++            <id>Abstraction issuesJava</id>
++          </State>
++          <State>
++            <id>AccessibilityHTML</id>
++          </State>
++          <State>
++            <id>AccessibilityLintAndroid</id>
++          </State>
++          <State>
++            <id>Android</id>
++          </State>
++          <State>
++            <id>Angular</id>
++          </State>
++          <State>
++            <id>Application SizePerformanceLintAndroid</id>
++          </State>
++          <State>
++            <id>ArquillianJava</id>
++          </State>
++          <State>
++            <id>Assignment issuesGroovy</id>
++          </State>
++          <State>
++            <id>Assignment issuesJava</id>
++          </State>
++          <State>
++            <id>Assignment issuesJavaScript and TypeScript</id>
++          </State>
++          <State>
++            <id>Bidirectional TextInternationalizationLintAndroid</id>
++          </State>
++          <State>
++            <id>Class structureJava</id>
++          </State>
++          <State>
++            <id>Code maturityJava</id>
++          </State>
++          <State>
++            <id>Code style issuesJava</id>
++          </State>
++          <State>
++            <id>Code style issuesJavaScript and TypeScript</id>
++          </State>
++          <State>
++            <id>CodeSpring CoreSpring</id>
++          </State>
++          <State>
++            <id>Control flow issuesGroovy</id>
++          </State>
++          <State>
++            <id>Control flow issuesJava</id>
++          </State>
++          <State>
++            <id>Control flow issuesJavaScript and TypeScript</id>
++          </State>
++          <State>
++            <id>CorrectnessLintAndroid</id>
++          </State>
++          <State>
++            <id>DOM issuesJavaScript and TypeScript</id>
++          </State>
++          <State>
++            <id>Data flowJava</id>
++          </State>
++          <State>
++            <id>Data flowJavaScript and TypeScript</id>
++          </State>
++          <State>
++            <id>Declaration redundancyJava</id>
++          </State>
++          <State>
++            <id>Description filePlugin DevKit</id>
++          </State>
++          <State>
++            <id>ECMAScript 6 migration aidsJavaScript and TypeScript</id>
++          </State>
++          <State>
++            <id>Error handlingJava</id>
++          </State>
++          <State>
++            <id>FlexUnit</id>
++          </State>
++          <State>
++            <id>Function metricsJavaScript and TypeScript</id>
++          </State>
++          <State>
++            <id>GSPGrailsGroovy</id>
++          </State>
++          <State>
++            <id>General</id>
++          </State>
++          <State>
++            <id>GeneralJava</id>
++          </State>
++          <State>
++            <id>GeneralJavaScript and TypeScript</id>
++          </State>
++          <State>
++            <id>GrailsGroovy</id>
++          </State>
++          <State>
++            <id>Groovy</id>
++          </State>
++          <State>
++            <id>HTML</id>
++          </State>
++          <State>
++            <id>InternationalizationJava</id>
++          </State>
++          <State>
++            <id>InternationalizationLintAndroid</id>
++          </State>
++          <State>
++            <id>JUnitJava</id>
++          </State>
++          <State>
++            <id>Java</id>
++          </State>
++          <State>
++            <id>Java 14Java language level migration aidsJava</id>
++          </State>
++          <State>
++            <id>Java language level migration aidsJava</id>
++          </State>
++          <State>
++            <id>JavaScript and TypeScript</id>
++          </State>
++          <State>
++            <id>JavadocJava</id>
++          </State>
++          <State>
++            <id>Kotlin</id>
++          </State>
++          <State>
++            <id>Kotlin Android</id>
++          </State>
++          <State>
++            <id>LintAndroid</id>
++          </State>
++          <State>
++            <id>LoggingJava</id>
++          </State>
++          <State>
++            <id>MemoryJava</id>
++          </State>
++          <State>
++            <id>MessagesCorrectnessLintAndroid</id>
++          </State>
++          <State>
++            <id>Method metricsGroovy</id>
++          </State>
++          <State>
++            <id>Method metricsJava</id>
++          </State>
++          <State>
++            <id>Naming conventionsKotlin</id>
++          </State>
++          <State>
++            <id>Nullability problemsProbable bugsJava</id>
++          </State>
++          <State>
++            <id>Numeric issuesJava</id>
++          </State>
++          <State>
++            <id>OSGi</id>
++          </State>
++          <State>
++            <id>PerformanceJava</id>
++          </State>
++          <State>
++            <id>PerformanceLintAndroid</id>
++          </State>
++          <State>
++            <id>Plugin DevKit</id>
++          </State>
++          <State>
++            <id>Plugin descriptorPlugin DevKit</id>
++          </State>
++          <State>
++            <id>Potentially confusing code constructsGroovy</id>
++          </State>
++          <State>
++            <id>Potentially confusing code constructsJavaScript and TypeScript</id>
++          </State>
++          <State>
++            <id>Potentially undesirable code constructsJavaScript and TypeScript</id>
++          </State>
++          <State>
++            <id>Probable bugsJava</id>
++          </State>
++          <State>
++            <id>Probable bugsKotlin</id>
++          </State>
++          <State>
++            <id>Properties files</id>
++          </State>
++          <State>
++            <id>Reactive Streams</id>
++          </State>
++          <State>
++            <id>ReactorReactive Streams</id>
++          </State>
++          <State>
++            <id>Redundant constructsKotlin</id>
++          </State>
++          <State>
++            <id>Reflective accessJava</id>
++          </State>
++          <State>
++            <id>SecurityLintAndroid</id>
++          </State>
++          <State>
++            <id>Spring</id>
++          </State>
++          <State>
++            <id>Spring CoreSpring</id>
++          </State>
++          <State>
++            <id>Style issuesKotlin</id>
++          </State>
++          <State>
++            <id>Switch statement issuesJavaScript and TypeScript</id>
++          </State>
++          <State>
++            <id>TestNGJava</id>
++          </State>
++          <State>
++            <id>TestingLintAndroid</id>
++          </State>
++          <State>
++            <id>TypographyUsabilityLintAndroid</id>
++          </State>
++          <State>
++            <id>UI form</id>
++          </State>
++          <State>
++            <id>Unit testingJavaScript and TypeScript</id>
++          </State>
++          <State>
++            <id>UsabilityLintAndroid</id>
++          </State>
++          <State>
++            <id>Verbose or redundant code constructsJava</id>
++          </State>
++          <State>
++            <id>WebSocket</id>
++          </State>
++          <State>
++            <id>XML</id>
++          </State>
++          <State>
++            <id>XPath</id>
++          </State>
++          <State>
++            <id>XSLT</id>
++          </State>
++        </expanded-state>
++        <selected-state>
++          <State>
++            <id>AndroidLintGradleGetter</id>
++          </State>
++        </selected-state>
++      </profile-state>
++    </entry>
++  </component>
++</project>
+\ No newline at end of file
+Index: factory.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- factory.iml	(date 1588142372069)
++++ factory.iml	(date 1588142372069)
+@@ -0,0 +1,11 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module type="JAVA_MODULE" version="4">
++  <component name="NewModuleRootManager" inherit-compiler-output="true">
++    <exclude-output />
++    <content url="file://$MODULE_DIR$">
++      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
++    </content>
++    <orderEntry type="inheritedJdk" />
++    <orderEntry type="sourceFolder" forTests="false" />
++  </component>
++</module>
+\ No newline at end of file
+Index: .idea/encodings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/encodings.xml	(date 1588142366782)
++++ .idea/encodings.xml	(date 1588142366782)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
++    <file url="PROJECT" charset="UTF-8" />
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/dictionaries
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/dictionaries	(date 1588142366797)
++++ .idea/dictionaries	(date 1588142366797)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ProjectDictionaryState">
++    <dictionary name="倪锦涛" />
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/compiler.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/compiler.xml	(date 1588142366782)
++++ .idea/compiler.xml	(date 1588142366782)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="CompilerConfiguration">
++    <bytecodeTargetLevel target="8" />
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/.gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/.gitignore	(date 1588142380383)
++++ .idea/.gitignore	(date 1588142380383)
+@@ -0,0 +1,8 @@
++# Default ignored files
++/shelf/
++/workspace.xml
++# Datasource local storage ignored files
++/dataSources/
++/dataSources.local.xml
++# Editor-based HTTP Client requests
++/httpRequests/
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/vcs.xml	(date 1591102845164)
++++ .idea/vcs.xml	(date 1591102845164)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="$PROJECT_DIR$/../gitLocalProject" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/uiDesigner.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/uiDesigner.xml	(date 1588143384286)
++++ .idea/uiDesigner.xml	(date 1588143384286)
+@@ -0,0 +1,124 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="Palette2">
++    <group name="Swing">
++      <item class="com.intellij.uiDesigner.HSpacer" tooltip-text="Horizontal Spacer" icon="/com/intellij/uiDesigner/icons/hspacer.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="1" hsize-policy="6" anchor="0" fill="1" />
++      </item>
++      <item class="com.intellij.uiDesigner.VSpacer" tooltip-text="Vertical Spacer" icon="/com/intellij/uiDesigner/icons/vspacer.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="1" anchor="0" fill="2" />
++      </item>
++      <item class="javax.swing.JPanel" icon="/com/intellij/uiDesigner/icons/panel.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3" />
++      </item>
++      <item class="javax.swing.JScrollPane" icon="/com/intellij/uiDesigner/icons/scrollPane.png" removable="false" auto-create-binding="false" can-attach-label="true">
++        <default-constraints vsize-policy="7" hsize-policy="7" anchor="0" fill="3" />
++      </item>
++      <item class="javax.swing.JButton" icon="/com/intellij/uiDesigner/icons/button.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="3" anchor="0" fill="1" />
++        <initial-values>
++          <property name="text" value="Button" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JRadioButton" icon="/com/intellij/uiDesigner/icons/radioButton.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
++        <initial-values>
++          <property name="text" value="RadioButton" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JCheckBox" icon="/com/intellij/uiDesigner/icons/checkBox.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
++        <initial-values>
++          <property name="text" value="CheckBox" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JLabel" icon="/com/intellij/uiDesigner/icons/label.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="0" anchor="8" fill="0" />
++        <initial-values>
++          <property name="text" value="Label" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JTextField" icon="/com/intellij/uiDesigner/icons/textField.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
++          <preferred-size width="150" height="-1" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JPasswordField" icon="/com/intellij/uiDesigner/icons/passwordField.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
++          <preferred-size width="150" height="-1" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JFormattedTextField" icon="/com/intellij/uiDesigner/icons/formattedTextField.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
++          <preferred-size width="150" height="-1" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTextArea" icon="/com/intellij/uiDesigner/icons/textArea.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTextPane" icon="/com/intellij/uiDesigner/icons/textPane.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JEditorPane" icon="/com/intellij/uiDesigner/icons/editorPane.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JComboBox" icon="/com/intellij/uiDesigner/icons/comboBox.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="2" anchor="8" fill="1" />
++      </item>
++      <item class="javax.swing.JTable" icon="/com/intellij/uiDesigner/icons/table.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JList" icon="/com/intellij/uiDesigner/icons/list.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="2" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTree" icon="/com/intellij/uiDesigner/icons/tree.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTabbedPane" icon="/com/intellij/uiDesigner/icons/tabbedPane.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3">
++          <preferred-size width="200" height="200" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JSplitPane" icon="/com/intellij/uiDesigner/icons/splitPane.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3">
++          <preferred-size width="200" height="200" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JSpinner" icon="/com/intellij/uiDesigner/icons/spinner.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1" />
++      </item>
++      <item class="javax.swing.JSlider" icon="/com/intellij/uiDesigner/icons/slider.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1" />
++      </item>
++      <item class="javax.swing.JSeparator" icon="/com/intellij/uiDesigner/icons/separator.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3" />
++      </item>
++      <item class="javax.swing.JProgressBar" icon="/com/intellij/uiDesigner/icons/progressbar.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="0" fill="1" />
++      </item>
++      <item class="javax.swing.JToolBar" icon="/com/intellij/uiDesigner/icons/toolbar.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="0" fill="1">
++          <preferred-size width="-1" height="20" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JToolBar$Separator" icon="/com/intellij/uiDesigner/icons/toolbarSeparator.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="0" anchor="0" fill="1" />
++      </item>
++      <item class="javax.swing.JScrollBar" icon="/com/intellij/uiDesigner/icons/scrollbar.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="0" anchor="0" fill="2" />
++      </item>
++    </group>
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/modules.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/modules.xml	(date 1588142372131)
++++ .idea/modules.xml	(date 1588142372131)
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ProjectModuleManager">
++    <modules>
++      <module fileurl="file://$PROJECT_DIR$/factory.iml" filepath="$PROJECT_DIR$/factory.iml" />
++    </modules>
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/misc.xml	(date 1588142372100)
++++ .idea/misc.xml	(date 1588142372100)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
++    <output url="file://$PROJECT_DIR$/out" />
++  </component>
++</project>
+\ No newline at end of file
+diff --git out/production/factory/Bubble/Demo.class out/production/factory/Bubble/Demo.class
+new file mode 100644
+index 0000000000000000000000000000000000000000..e14209a628e09d2c183e35e8b13e2bb6ac32e474
+GIT binary patch
+literal 1684
+zc${riT~ixX7=BK&n@yG_*#y$sCh@B+h6R#ZD@DF(T3QP2I$}F!nCY-U3JZZSo1jzm
+zlF@(R1v0~}^`fHV<l6DVOMix5+o|GnPEu)|B(v{%&wJjl=XuZWumAki1aKAeCM*<8
+zbfGB4<rv<@6%+5_s)_e89K|&gBltjCMy11;fpG&90+Dfl$8Ssug!BCm1hi6Zts;<E
+z@OLWr_O@3l!N=Z8m6p^(ZPlwj@B&}%+eWRi;nxMa7q0KE&``Wl*{+SzyzTir0%!6|
+z3!C1jUa{)!tQQv>fxojpriysMI>UN89J3EE2n0e)b5vKPDm+=egQvc_;RSW+TOy9F
+z`eH3;(3)SGlSR508{X>HU2peAuXS~7@OVx+XpPGDF4MD+R;@gep@F}?!BzNtHu-EZ
+zuS_SKF&Arl!D?mJm&sxhX+id6p&M}vZ{SS}Z)3o~q=hL=8<??h9VG)dEZoE_lW$b2
+z)tZ4@7H(rs9^R1=7X-RqVo$(6Me43>R#qFYm=+(`**2-E?eQSpqQ$QjKO`p&GE?!k
+z$6f^NHT-IECJ4O8Bq`dcwTM%5nd|RFXitZ1WNcUNsvKxK-+7+)|E<K-sFgS!Rh|6i
+z`{j&SxYVIA-r|L{Ab&c9<dZVNU6HGhR_6zZCsabPDI>}lL6XvHIUt1|t}*l?-46Z>
+z8tuT>cH(EV9M;{krnzN3>XsvRw_7%B+bu`!xLdX(c7)QfQ<PD=mojEsl%}1a?6PB&
+zmW;8x?IdN~a2E!S5#kfR`#m(S`cp)x4YstDac}4;qN5s3=d@$QXgh7ck8J``+=q!W
+zkv}Ae4WbT+dylPuL9ed}E~#E@1p#Mpmg{|7!D~22fDh4+^VC9&NFjqP!i=+!!|Q}?
+z%Inys;STqbqJ-1@29^_cn%deiOxaFYwG-zGvZk|0oas+lO{ikvc%-k0GcWIJE3YUq
+zufc;aGn3h2Etl2~p*?YOg<+lg0d6Uoa?)BMtsf$`ubmv7{Gp6VdZqPmX$y;^lRu^H
+z<Tn`^adOh%rASBIqmv(1IvO*yWzxFqgmbESC#NlEUjgwE2M_WPA`?0}u!uj&#?P|j
+zKK49_OBkg#P2OhVU>*aE8N??T!V)fHnV-u?WOs`n%Q~)+%MnGyZDO3~Y%VfBBGI-f
+zky;;ZLTT?%3-SLs^3=lY;4{{_M23>g=up!Yi3vphh9$&vXhQGpIj;yEXb-AMCynb=
+zcs%1Y4=@s*$U4o;nznX;J||mnvf6Ut5NWEDPFC$)DRb_Ah&=wjFDQR;zWa}p);$~N
+zO`9M)le`mCWMY~HXNY!!D90&pDx3~WU*PyJs{T!~(%;53rZ7pIQ!ibIB=qM95r`rB
+Po<V=6Ufe--#fSa{T$(B;
+
+diff --git out/production/factory/Bubble/BubbleSort.class out/production/factory/Bubble/BubbleSort.class
+new file mode 100644
+index 0000000000000000000000000000000000000000..51be243f8a5057c495f4a71c9365aca4875e0ba1
+GIT binary patch
+literal 1488
+zc${rhO>-MX5Pf6K?n=s9TFYJ=ED10KM_v<&kHnbB7-APrOaz-kNeY!OS$)J=Tb5jF
+ziBy1Neg_BRDqjf)NGM8IC=ML?8E~fv=FP~&q_93-_w;o4^m{w|%ili?09-&hi8#(B
+zVWFU4E&&hoNxX*hNfc4C@VbRJ1k9zd6ZVz`VuiU|0&=z6Yzd?*VW;(Rf2ZDxZUpr<
+zBbiFK5wvdwQK;6(LD{<-?g@-nR{C`YN<&laM!hmO_h<!-!p6GlECPX%jdg+1YA<MP
+ze-!K<H?f$ou2baRy<nG_Oo|0j#6Y`sN41E;&AYTB<bR9*ZGmL{=~*P9&QQH&ueHMt
+zawiBo0+WS}%2x1MP-+LA%~G`&g`Lf^J}8Jb)!e6SvvalEj~cDDPz{$pp;T14HWEnM
+zaNsH!v+$;kw{XG2MH>rv+rpxacW_By?0=F7I47t1^{rOp*--WV9;YYuZl4?OaI~;n
+zy3V<JoURq@l>aU0_riARaufykNh99t4u{u_*XK?nHGWDrO24aCZA#@9PE!gqyg6~G
+zj{%{m6VGr}q7^FYeGl=F&IoLxse@w}CECLTq>!dfD7B7@KZMkKX>afqY%k^wWb+Y5
+zRGXM?lcEJCSnSfD`cJzwG8or;Dp#a*Uw7D7tg^4gjW4syxdoYb<pJbFFJD|R=<nl-
+z#*F96qH7!=@jxCO9{sL^W6W}muNjMp!=pb`?C4ijX?l5;?-N|pKRkM@+cB7BEbAJC
+zydK`m%iFnUNPMD)oTf5a63H|6A{Ce+omVi6vwRWH;SvgXAM;q_>Ke|orif1|?gsDF
+zZN9^Ia1q;B#2z!hKv@fMl^n0pn`9?bvBh&*66HP5n9$xdy%Byt=jl_N$iO}1=t<77
+z&1t3>nb3loPhbo27o;#I#-}Oh3mkO#pnhVKq+Ru5#iiK0Id8C!#n^J*8|0d@xsO?@
+zp@<g`;L=^9E^6f~%=%i(-yVz*fA+q4s*A@<1YBn06|Pq~{RdQJjcQyW^Q&aMN~SB!
+zsA#?(GgH(ir+Jv%%W7`WwTijKdw5ARSBx?+p1@R$EHV2h4E{)J1}`6z;-%2lO(*?h
+zvKBM^nv{Oci2F6u8TD(H<M_3>lk#hh>6k>z$q?ht1To>*#H5oZo^cXHTh%zD&KNOe
+z`IY%ch<yu5V|)km<ju%vA+O^mpK%RUG;l++n;gzU1<umm<nvIR)XVj%uATh{WugQm
+
+diff --git out/production/factory/decorator/ShapeDecorator.class out/production/factory/decorator/ShapeDecorator.class
+new file mode 100644
+index 0000000000000000000000000000000000000000..b70d8ee66cb359f998acbcb1aeb154d6b79127f1
+GIT binary patch
+literal 748
+zc${@n+fLg+5IvKdvEv5fa4WqK?jcCc3s0p&qM$xmRn=6yZ{iggIbO8hQ1!D~AyE6!
+z58$H^v&N+~ZEb0H&Rou%*}1v>@e{x<c09OPbTNgebu8hT$JTQfFYs~-%O2WTaj@!O
+zjZk|Nr?J^5%yz;^4wV*0>0bX-oXfrKV?yOnMUpTb#;JTi9u1`aBnAn4f=~@bax8Rg
+zapA0((>Nn6O;R2Gf_sE&W<7-FU;Vf~(&96r+_A0wOq!1}daHCKHNoqvu^!5Iv2E1)
+zllIk_xDY-()O|D&I9T`5!mN)u)E#X2*u)lhyr*g(szmA6ZRU2+@v)6AVex;82@4aU
+zgF$Ar7#e<+i3nlF3h5;xJ?ZtoWJZp77&Ye9xiF8!s`o+1sp%Un#fT?v{liUg&Mit(
+zuIq%4C=I($crRGtg}Sg`8D!_?(`U4g68}K0yK@ct%2o+a`1J0*sKP;mt@#2^V<u;*
+z*=J)8vd>m<9dQov9ds{I`i?T8YprWke)BfCKRDZE)MV7iQC?MWm+TG-#)Cqg`wi8g
+Yb_HirV8COw9tm_G1iB9b=kuC{J2aq@SO5S3
+
+diff --git out/production/factory/decorator/ShapeAbstract.class out/production/factory/decorator/ShapeAbstract.class
+new file mode 100644
+index 0000000000000000000000000000000000000000..74c59737379678e63d6a758332f88c597059ea7d
+GIT binary patch
+literal 486
+zc${^R%}T>S6ot>^*QBXww6@lryIR3)TnLIFLRUo>mF_1$*p!&aB-Q5<6w!qb;6sUb
+zrU9`c!`zv3=iF~*?&sJ02Y_SjxiHanU|^>O3q2cs8@o0J3}!Xw_bEd#Nz%9!ye>sJ
+zm8nw(>ntm>`kbLV{BwFRV=ykugi8HMR-{+UyC@YmJjyAvH7R4B&$!5>Zjwel&nkw&
+zI_e^-YQf{0E;JIs9~tzaq`T8{DdKdTDdI2d(Skp44-NtkHa0wT5HR%r0W)-@Kg@Y?
+z8(v3?RHpnjv$0RzF+rcEX-Fz{PNTg8mtu?5n6yT#J9-5h9lk(&QXY@uCUlCHs&uHf
+uO{%wY)0q#bouo1v^xTGdqO@c_LwkeH@WXUfz5Hfd@w}C@;ZaYNbNd?!^IDbw
+
+diff --git out/production/factory/decorator/Shape.class out/production/factory/decorator/Shape.class
+new file mode 100644
+index 0000000000000000000000000000000000000000..c80303b3ac0d5765c15f814bacf20b696da714a0
+GIT binary patch
+literal 122
+zc$_=+Z`VEs1_l!bPId-%b_Nbc29}hf#BxRkW)00SMh33n{L-T2RJY8WR1ha4u^?41
+zE3qt*k%2!YH95a1u_V7pA1utsAOMok&q>Tn*Y{7#N=+_dV`N}tU}69PMi!un3@jiP
+L11peZVqgORL!=qw
+
+diff --git out/production/factory/decorator/Demo.class out/production/factory/decorator/Demo.class
+new file mode 100644
+index 0000000000000000000000000000000000000000..4c3bff8d50bc98089440c0a5eaf4eba7dd31f475
+GIT binary patch
+literal 650
+zc${@nO;5r=5PeH2g@Sy82&mv!K#W|xVZ2B@RXt!xh^GY_D1p|LqQA?FL`nPs{wU*Y
+zK~dBuJCmLF=FOY!+xyEafD;_32q32*ufl^|5S!Riu&qKyK?J%K73?thP7Tv=&KRUp
+zxyj%?x4Jq*L^DkNYBFl;_6=_jsS?+$4j(qTZHW7#=ym$Wm?5fl^^Rq8$Fi$+ePq=L
+z8F9m8NSAK40l(+fAvb%~hGQFMujbC-c8@v}f4~g#xX<rMKK4zwAxeaWU9A3DXUMLS
+zzA$2|4Qpa|^b13{4G3??VqOR;f()sZ&g=F-?>Gu}L)a5|=09c8zfWF%u1ycITxPCC
+zFS(*Yt9Nbwz>qBc+OFJ05q|n_;`4wBmlQ*Et5Rl^<-;l1qYJN5^tnX|VTz$S0TDzg
+z2M|Mi(L5lAL^(f$r!|G7Ri5Exm_cq;rtn=JJwaJ&rb$ES_(?rX7S_o`j&#I~!dwRl
+VBq{qTrijmoBh$&arZ-%r><4|oiCq8y
+
+diff --git out/production/factory/factory/ShapeFactory.class out/production/factory/factory/ShapeFactory.class
+new file mode 100644
+index 0000000000000000000000000000000000000000..5e9b45ef6081538fea8a0d4bc63e3cc706754748
+GIT binary patch
+literal 639
+zc${sK$xgyh6o&sxfkK&4aR3Lv1%r_|>@aRjSfMU3BrY%I3I%LQEhesg7uUEV(ZmPv
+zp^WF2CW_L<Ip;sqcW(Om_4Wba6#E*Y$cB(pv8_Ro;f{)34M7?1smN;xBdemIqR0?D
+zGfcxdXHZJzHiQ4d>I#NL(=f%=<h~>98{QdFCf&4jK5BE@klIW7oxbtFkZIm=-LdSa
+zTC2~;qA?eBhEPv9Zi=B;Y7Y1#uZ_6btF;{4Fnjg#;v5YGbZcbUlJ>8eA=YxZKD^{(
+zkFK?>iLHx<Aw}vp`cO_s5ks8bWs5Gu>H_JyGZ4CSM7*9Ygt@$YOz#^T=5TrS<Zs$T
+zGbDdbpSL292>lcJ`M~5=WD}%n<Qe%uWd`=@mXl<IZc;&tY;@j$G*-wH6Kme^Gj;pO
+zA5_!67ewBn+|J;iR?`7j1xcx-Laqvv(xz<c?v;!ksAN@Qh3K3x?bVQ@GYdqlP)4#d
+Z^Zg!MMj5OVeZ##-iN|6jHr=zgz5%GXg#iEn
+
+diff --git out/production/factory/factory/Shape.class out/production/factory/factory/Shape.class
+new file mode 100644
+index 0000000000000000000000000000000000000000..f1d89962d6a7aee7b0517504ccd6218a7ecf2b2b
+GIT binary patch
+literal 120
+zc$_=+Z`VEs1_l!bPId-%b_Nbc29}hf#BxRkW)00SMh33n{L-T2RJY8WR1ha4u^?41
+zE3qt*k%2cYF}Wnas8Sy+$jBf764uX2%uCnzPs&P7E@5M2U}Ruo00Bl8pm_`|AQl5F
+JkYr+D0|4~w85RHl
+
+diff --git out/production/factory/decorator/ShapeObject.class out/production/factory/decorator/ShapeObject.class
+new file mode 100644
+index 0000000000000000000000000000000000000000..66e6c83e596f6780ea36f4fca7fbe54f54b466aa
+GIT binary patch
+literal 523
+zc${reO;5r=6rAO&v{pe7@mslp2YWFw5#z<gQ==v|+?TR}HKj|IMdQ!XgC-vQ0sbiC
+zYgItQ<xSqanR)y6<MZtuz%d#Q3aHqqVy%dpgLTv`Y*^T|u*Fa~ld&}C4B2L@!;rgB
+zJ;6}&Wh|~H!>-V`yc-cy@m0v94%ag2f5@B}$T36R?}<=pZj|<d0UwF$?wtrtn*=@0
+z9~hiKO>`(OWnwDNNsjLLJ$F%rZDHHR4t5#rP(@0gYSFW>=VBiR47G&|C@b-M5s&-c
+zFID;{{UZt<$3_h4ST!MO%}*y%c{f_dCNNs?A-%e~fM&2pNf*WBYx;AMhUk8~)j<P!
+z`e_o<w`U0HDyj~39w8&lAHIS;rQ;>4g_O*~rRshQu#6Q#I%8@+Ny7m98JSA<1-V&(
+SLzu)AY3D4&o`#fD<?0tVRct2!
+
+diff --git out/production/factory/factory/ShapeObject3.class out/production/factory/factory/ShapeObject3.class
+new file mode 100644
+index 0000000000000000000000000000000000000000..c799fcc49eb0d58b0b2e0e075f69a47168bad489
+GIT binary patch
+literal 515
+zc${re$xg#C6dZR;6H@5TzVy~|AP0~*6mdb~6ai9D?`~>Zmn>E4g8Er-0Eq)1z(*lo
+zQq)DNEWOd2H#4^1&+peafD1GX<WSa8K{bz>fjYJ|>}c54u*Z<Ql7Up$4C!X8!;rZN
+zdxBxhmVvmN_+1e_@~%fr*$!Rqb$BG>{-4aKfgCf`?I-T4Fq&G<fRDs|cPLzS-llmk
+z;;#&b6HX#m+{)NfTGpHm`3pCZhpu7Y!~qV;G?Kxyh9eWlIAN%+%VsFXPRrv#-<oj@
+zg%#zB#F>tj@adD`goHIanaI$3h-9D~6$$Rsb1Q3T25l5~UO>L4y%ed4?zdYVG?1kY
+zlaSV(BBb9?HK?-)8DaMH6YMP+Z&1x8WEv(_b0$Cmn}oFax%n~)1N3*K%IObe76Aq!
+Q=)OFiMTkBRDJII&9|aF+cK`qY
+
+diff --git out/production/factory/factory/ShapeObject2.class out/production/factory/factory/ShapeObject2.class
+new file mode 100644
+index 0000000000000000000000000000000000000000..58adfe89d3b18525c433fd50c19dfe8896867e07
+GIT binary patch
+literal 516
+zc${re%SyvQ6g|^dnwV<ez8~GSE)0m^qT)ty6;z0HKTXFvB~8k7s`RsTq2R&~@T0_=
+zRQiB2a1Zy~bI#1%pWm-<02gRj$f0baf@&T$3w3N8*fFqcV2>epB}1vN8Pd&Ghaqzl
+z^#sF~D?@QN8Fqzw<lTUnvK#q4=x`<D{-4a~XE|o5yHDKLk(xT*Garfj?m+nZyiN0-
+z;;#&r7fqBeZe{E#Eo;sO{Ds@d!!)pO;{b;Y*}f7YG;n0&7$*$Xb>R%f*y;p4>^n1#
+zp|GM{k$BUw7DM`FG$CQlO(rsO9+V8Vr<LGCdT(V7&0vh;E(pojbeAGE(fxL-g9fs+
+zViMB6Q-t&#supz)AtTJ5euBLv;|;30giOPxYR?2HV3UwmKQ~_{VSxFLR5|^D%p$-d
+R1l^aXvj{QgA;m;l`U9z5Xw(1z
+
+diff --git out/production/factory/factory/ShapeObject1.class out/production/factory/factory/ShapeObject1.class
+new file mode 100644
+index 0000000000000000000000000000000000000000..6e632c61ab798ec5a3853830687f2161d2eaf106
+GIT binary patch
+literal 514
+zc${re%SyvQ6g|^dnwV<ez8~GSE)0U;qT)ty6;z0HKTXFvB~8k7s`RsTq2R&~@T0_=
+zRQiB2a1Zy~bI#1%pWm-<02gRj$f0baf@&T$3w3N8*fFqcV2>epB}1vN8Pd&Ghaqzl
+z^#sF~D?@QN8Fqzw<lTUnvK#q4=x`<D{-4a~XE|o5yHDKLk(xT*Garfj?m+nZyiN0-
+z;;#&r7fqBeZe{E#Eo;sO{Ds@d!!)pO;{b>B5G8sBj%*y`grT}FnxPmQoq&gZXT~uU
+zR+K9eZ#vduNYT-Rgf%yr$jEt6GSr?{f)DAnl{GYjF^an&Bwy2Aiqu5++pP{7$kKvI
+zNZU>k(r2hz)H#HVFnjt5_Lht{sOAzf4V$Vx6QF=iLR$RXe3^s+<~vg5^anDF0E-ZG
+PU!Kk)#GHo|6J_ZSHdSZ&
+
+diff --git out/production/factory/proxy/ProxyImage.class out/production/factory/proxy/ProxyImage.class
+new file mode 100644
+index 0000000000000000000000000000000000000000..6deade4896b24211107e1d4f40f3f33c8e002dcc
+GIT binary patch
+literal 504
+zc${TWO;5r=5Pj1YDsA~H2!eX>h8*n0o5qWYi3xrr7!r<4X|M>C)Z)j_GEqr1@oM6a
+zGR~G7h#vOM&YO8}XXoqt?E}C*whid0WRONx$A$qF6$v#Rbsd{Jwg{#_76b31H}u?y
+zP-;!X;Nj6ZU6Kcc^r1iTqa%Xa*zFLs<Dl;m@-2VjozKQSFT4`H5i@oxaK)%2LSN<y
+zsYTcRt*kAaFD1tIY^?P|aZkv$BjMhhiD@D++QBSzy%S$1`K4lSDDH#>6PASx3_|hW
+zv=(ewgu>s)n37^=Bqjsr_qXPX96P)v9fUPLinQkqDtzbH7_*!?9EoG9IR`z(<s4%=
+zCQalStwjS0C~_n@Od{^`-es-ce1`IgT=N}jcMk0Ziez4ql8$QZXhUNx@i=9^S5QNB
+S#l4=mm*Rf1nJmY{tp5Poj$VcU
+
+diff --git out/production/factory/proxy/ImageObject.class out/production/factory/proxy/ImageObject.class
+new file mode 100644
+index 0000000000000000000000000000000000000000..d9b10aabcd515a549b1819f5198ba45eb7c7cf88
+GIT binary patch
+literal 513
+zc${sJOHaZ;6ot?5DlJuci0>CWaA7wlCSu%}n3yzbf?+?v1c$U8G7Ks|OBb5B@CW##
+zjJH(*qnmqj&pr2R=e~cuz5zHy%|Q-j8x<_)QFX9_RSRnt)-7x><W6KH%_&2=-e@yq
+z&Qwn@Ecr4Lm*cP_^bPL><dl8Y<w2Wk8Ta32#@xygL&YCz^)T@+Lf#iwoq_0@CJlR<
+z-!nKZHP&5mF5`vbT;yQD@3@ORYzvz%wy@1mxD`R5juV`P9T&UUV<`Q>6Di*I0v`3f
+zAFD7I`xR(SMn;76L^Y;Z)lVi;dDmJ-re(C?A^mUVADh7%#$6E6UfrKV8nXM%MjJI`
+z>An=CW2Z>zJyad)JW@uQ-G2dlOvVMOxx`GvrRshKuz*EUy8CqbD1ia?6H?{$Gcq%P
+SLmFf9^vxN>o<fRAvh)dxZ)jcs
+
+diff --git out/production/factory/proxy/Image.class out/production/factory/proxy/Image.class
+new file mode 100644
+index 0000000000000000000000000000000000000000..86e4e90fc53f2f54929cccc69c246439f7b2539e
+GIT binary patch
+literal 118
+zc$_=+Z`VEs1_l!bPId-%b_Nbc29}hf#BxRkW)00SMh33n{L-T2RJY8WR3OJQH!(d`
+zFDtPuk&%JBpeVnhQXeeD$RGd`)Xz!GOV{^L%1TWxVPj-qWME<d0Y(;}X$&kN76U7g
+IWMW_g0H!GzLI3~&
+
+diff --git out/production/factory/singleton/SingleObject2.class out/production/factory/singleton/SingleObject2.class
+new file mode 100644
+index 0000000000000000000000000000000000000000..fe84f237bee86e67693836f47294c81419221887
+GIT binary patch
+literal 459
+zc$|GuO-sW-6r63oY?`Juu@>><t?^($yj8pio}wNi1&^D!#H}%rH0|%IUJ43c1%H(I
+zk`%EA-G%otZ{EzZpI@)<08TJ8p}}oK!H$7}N!c~9%V5o9mZai3nu@q&*bADz%rigy
+zH8~zL=%+H1<r#xA@+J)Gd44AtdV$Qu)%-CM#SM>ALYyFvc{<^Rtok*mmiKZ->_n8|
+zhU5Oo`^U2zmOOsA<WFlEGtB2jEG}eiw81`_@&&iBg|-D92E*_VS%!W^^;4cDeuLqF
+zK18FBB8O_3suo?+su94a%qVMzE3oH!+@Yw~pbd+n)ez9F*F8de>*X=AtK+<&^?}YC
+gl-m{5C3VXmC7T{V3{rHd9-vR10%nuMc1?1=0SFge?f?J)
+
+diff --git out/production/factory/singleton/SingleObject1.class out/production/factory/singleton/SingleObject1.class
+new file mode 100644
+index 0000000000000000000000000000000000000000..f96828a235a20e2a173b9badcedd41cefa107d5a
+GIT binary patch
+literal 472
+zc$|HZ%}T>S6ot>^w@IU|jao!E;-+<B5ZqbZ2(E%IA_bR89O9IiK$`koRu=^YAHata
+z?@WqXL1%G)&fIgqVctJp-T<7S@4|%dK*y$yEtj%yW1GR7iXzMTRWjje&9D<TeO(qo
+z^yB9El))N_Leysr`d~O_FwV<c&d>=(!7pd`39qi>Bqya8mT8=i<4VYWDH`>in9_8{
+z>u80zI~e}MY>m=<Np+)gR;BzxD8|a*(IkF|J+$C>uwXOv|JcaTm7_r(7g^9~*r&fR
+z>5qsY%~a{o<SwNE0cA$nJY0aysnF1-XeqG+kD}KMU`^Q_tdriD_tXtwJVAR@kZ-R~
+cknR`efcDDMeuaLsfbk4%{>vaS8|neQPnm^U-2eap
+
